@@ -1,0 +1,102 @@
+name: 'Terraform'
+
+on:
+  push:
+    branches: [ "main" ]
+  pull_request:
+
+permissions:
+  issues: write
+  id-token: write
+  contents: read
+
+jobs:
+  deploy:
+    name: 'Terraform'
+    runs-on: ubuntu-latest
+    environment: production
+    
+    defaults:
+      run:
+        shell: bash
+        working-directory: environments/dev
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Configure AWS credentials
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          aws-region: ${{ secrets.AWS_REGION }}
+          role-to-assume: ${{ secrets.AWS_ROLE_TO_ASSUME }}
+          role-session-name: ${{ secrets.AWS_ROLE_SESSION_NAME }}
+
+      - name: Setup Terraform
+        uses: hashicorp/setup-terraform@v3
+
+      - name: Terraform Init
+        run: |
+          terraform init \
+            -backend-config="bucket=terraform-test-access" \
+            -backend-config="key=environments/Development/terraform.tfstate" \
+            -backend-config="region=ap-southeast-1" \
+            -backend-config="dynamodb_table=terraform-remote-state-dynamo"
+
+      - name: Terraform Validate
+        run: terraform validate
+
+      - name: Terraform Plan
+        run: terraform plan
+
+      - name: Terraform Apply (on push to main)
+        if: github.ref == 'refs/heads/main' && github.event_name == 'push'
+        run: terraform apply -auto-approve
+
+      - name: Upload PEM file (using dedicated action)
+        if: contains(github.event.head_commit.message, 'key-pair')
+        uses: actions/upload-artifact@v4
+        with:
+          name: pem-file
+          path: environments/dev/ems-node-dev.pem #specify the path name and key file name
+
+  destroy:
+    name: 'Destroy infrastructure (manual approval)'
+    runs-on: ubuntu-latest
+    environment: production
+    needs: deploy
+    defaults:
+      run:
+        shell: bash
+        working-directory: environments/dev
+
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v4
+
+      - name: Configure AWS credentials
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          aws-region: ${{ secrets.AWS_REGION }}
+          role-to-assume: ${{ secrets.AWS_ROLE_TO_ASSUME }}
+          role-session-name: ${{ secrets.AWS_ROLE_SESSION_NAME }}
+
+      - name: Manual approval
+        uses: trstringer/manual-approval@v1
+        with:
+          secret: ${{ github.TOKEN }}
+          approvers: thomasvjoseph
+          issue-title: "Deploying AWS Infrastrucre"
+          issue-body: "Please approve or deny the AWS deployment for Dev environment."
+          minimum-approvals: 1
+
+      - name: Setup Terraform
+        uses: hashicorp/setup-terraform@v3
+
+      - name: Terraform Destroy
+        run: |
+          terraform init  -backend-config="bucket=terraform-test-access" \
+          -backend-config="key=environments/Development/terraform.tfstate" \
+          -backend-config="region=ap-southeast-1" \
+          -backend-config="dynamodb_table=terraform-remote-state-dynamo"
+          terraform destroy -auto-approve -refresh      
