@@ -1,7 +1,7 @@
 output "cloudfront_distribution_id" {
   value = { for k, v in aws_cloudfront_distribution.cloudfront_distribution : k => v.id }
 }
-  
+
 output "cloudfront_distribution_arn" {
   value = { for k, v in aws_cloudfront_distribution.cloudfront_distribution : k => v.arn }
 }

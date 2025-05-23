@@ -1,7 +1,7 @@
 variable "availability_zone" {
-    description = "value of the availability zone of the instance"
+  description = "value of the availability zone of the instance"
 }
-  
+
 variable "ebs_size" {
   description = "value of the size of the ebs volume"
 }

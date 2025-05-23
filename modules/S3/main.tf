@@ -1,12 +1,12 @@
 resource "aws_s3_bucket" "example" {
-  for_each                = var.s3_resources
+  for_each = var.s3_resources
 
-  bucket                  = each.value.s3_bucket_name
-  force_destroy           = true
+  bucket        = each.value.s3_bucket_name
+  force_destroy = true
   tags = {
-    Name                  = each.value.name
-    Environment           = each.value.env
-    Terraform             = "true"
+    Name        = each.value.name
+    Environment = each.value.env
+    Terraform   = "true"
   }
 }
 

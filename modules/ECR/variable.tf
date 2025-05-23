@@ -4,7 +4,10 @@ variable "image_tag_mutability" {
 }
 
 variable "app" {
-  type = string
+  type        = string
   description = "Name of ECR repository"
 }
-   
+variable "tags" {
+  type        = map(any)
+  description = "Tags"
+}

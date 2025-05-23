@@ -48,6 +48,15 @@ jobs:
 
       - name: Terraform Plan
         run: terraform plan
+      
+      - name: Manual approval
+        uses: thomasvjoseph/manual-approval@v1.0.1
+        with:
+          INPUT_TITLE: "Manual Approval Request"
+          INPUT_BODY: "Please approve or reject by commenting 'yes' or 'no'."
+          INPUT_ASSIGNEES: "${{ github.actor }}"
+          INPUT_MIN_APPROVERS: 1
+          INPUT_TIMEOUT: 10
 
       - name: Terraform Apply (on push to main)
         if: github.ref == 'refs/heads/main' && github.event_name == 'push'
@@ -82,13 +91,13 @@ jobs:
           role-session-name: ${{ secrets.AWS_ROLE_SESSION_NAME }}
 
       - name: Manual approval
-        uses: trstringer/manual-approval@v1
+        uses: thomasvjoseph/manual-approval@v1.0.1
         with:
-          secret: ${{ github.TOKEN }}
-          approvers: thomasvjoseph
-          issue-title: "Deploying AWS Infrastrucre"
-          issue-body: "Please approve or deny the AWS deployment for Dev environment."
-          minimum-approvals: 1
+          INPUT_TITLE: "Manual Approval Request"
+          INPUT_BODY: "Please approve or reject by commenting 'yes' or 'no'."
+          INPUT_ASSIGNEES: "${{ github.actor }}"
+          INPUT_MIN_APPROVERS: 1
+          INPUT_TIMEOUT: 10
 
       - name: Setup Terraform
         uses: hashicorp/setup-terraform@v3

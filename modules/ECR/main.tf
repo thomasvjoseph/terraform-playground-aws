@@ -3,8 +3,7 @@ resource "aws_ecr_repository" "app" {
   image_tag_mutability = var.image_tag_mutability
   force_delete         = true
   tags = {
-    terraform = "true"
-  } 
+  }
 }
 
 resource "aws_ecr_lifecycle_policy" "main" {

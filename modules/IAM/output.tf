@@ -2,9 +2,14 @@ output "ec2_iam_role_name" {
   value = length(aws_iam_role.ec2_role) > 0 ? aws_iam_role.ec2_role[0].name : ""
 }
 
-output "ec2_iam_role_arn" {
-    value = length(aws_iam_role.ec2_role) > 0 ? aws_iam_role.ec2_role[0].arn : ""
+output "ec2_iam_instance_profile_name" {
+  value = length(aws_iam_instance_profile.ec2_instance_profile) > 0 ? aws_iam_instance_profile.ec2_instance_profile[0].name : ""
 }
+
+output "ec2_iam_role_arn" {
+  value = length(aws_iam_role.ec2_role) > 0 ? aws_iam_role.ec2_role[0].arn : ""
+}
+
 
 output "ecs_iam_role_name" {
   value = length(aws_iam_role.ecs_role) > 0 ? aws_iam_role.ecs_role[0].name : ""

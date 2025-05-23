@@ -33,12 +33,12 @@ variable "route_table_name_private" {
 
 variable "subnet_cidr_blocks" {
   description = "CIDR block for the subnets"
-  type        = map(object({
-    subnet_cidr_block    = string
-    availability_zone    = string
-    ipv6_address         = bool
-    ip4_address          = bool
-    sub_name             = string
+  type = map(object({
+    subnet_cidr_block = string
+    availability_zone = string
+    ipv6_address      = bool
+    ip4_address       = bool
+    sub_name          = string
   }))
 }
 

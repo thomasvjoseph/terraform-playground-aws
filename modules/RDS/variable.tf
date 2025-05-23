@@ -1,24 +1,24 @@
 variable "parameter_group" {
-  type        = string
+  type = string
 }
-  
+
 variable "parameter_group_family" {
-  type        = string  
+  type = string
 }
 
 variable "parameter_group_description" {
-  type        = string
+  type = string
 }
 
 variable "rds_parameters" {
   type = map(object({
-    rds_parameter_name = string
+    rds_parameter_name  = string
     rds_parameter_value = string
   }))
 }
 
 variable "rds-name" {
-  type        = string
+  type = string
 }
 
 variable "rds_engine" {
@@ -61,10 +61,10 @@ variable "storage_type" {
   description = "Type of underlying storage for database"
 }
 
-/* variable "iops" {
+variable "iops" {
   type        = number
   description = "The amount of provisioned IOPS"
-} */
+}
 
 variable "database_name" {
   type        = string
@@ -86,12 +86,12 @@ variable "database_port" {
   description = "Port on which database will accept connections"
 }
 variable "availability_zone" {
-  type = string
+  type        = string
   description = "Availability zone for database instance"
 }
 
 variable "vpc_security_group_id_rds" {
-  type = list
+  type        = list(any)
   description = "List of security groups for database instance"
 }
 
@@ -156,8 +156,8 @@ variable "deletion_protection" {
 }
 
 variable "publicly_accessible" {
-    type = bool
-    description = "value for publicly_accessible"
+  type        = bool
+  description = "value for publicly_accessible"
 }
 
 variable "db_subnet_group_name" {
@@ -167,6 +167,7 @@ variable "db_subnet_group_name" {
 variable "performance_insight_enabled" {
   type = bool
 }
+
 
 variable "tags" {
   default     = {}
