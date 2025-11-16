@@ -70,6 +70,14 @@ resource "aws_iam_role_policy_attachment" "ec2-attach" {
   policy_arn = aws_iam_policy.ec2_iam_policy[count.index].arn
 }
 
+resource "aws_iam_role_policy_attachment" "ssm_core_attach" {
+  count      = var.create_ec2_iam_role ? 1 : 0
+  role       = aws_iam_role.ec2_role[count.index].name
+  policy_arn = "arn:aws:iam::aws:policy/AmazonSSMManagedInstanceCore"
+}
+
+
+
 resource "aws_iam_role" "ecs_role" {
   count = var.create_ecs_iam_role ? 1 : 0
   name  = var.ecs_iam_role_name
@@ -118,7 +126,6 @@ resource "aws_iam_policy" "ecs_task_iam_policy" {
           "secretsmanager:ListSecretVersionIds",
           "secretsmanager:GetRandomPassword",
           "secretsmanager:ListSecrets"
-
         ],
         Resource = "*"
       }
@@ -126,11 +133,16 @@ resource "aws_iam_policy" "ecs_task_iam_policy" {
   })
 }
 
+resource "aws_iam_role_policy_attachment" "ecs_task_execution_policy" {
+  count      = var.create_ecs_iam_role ? 1 : 0
+  role       = aws_iam_role.ecs_role[count.index].name
+  policy_arn = "arn:aws:iam::aws:policy/service-role/AmazonECSTaskExecutionRolePolicy"
+}
+
 resource "aws_iam_role_policy_attachment" "ecs-attach" {
   count      = var.create_ecs_iam_role ? 1 : 0
   role       = aws_iam_role.ecs_role[count.index].name
   policy_arn = aws_iam_policy.ecs_task_iam_policy[count.index].arn
-
 }
 
 resource "aws_iam_role_policy_attachment" "s3_ecs_attach" {
@@ -143,5 +155,4 @@ resource "aws_iam_role_policy_attachment" "sns_ecs_attach" {
   count      = var.create_ecs_iam_role ? 1 : 0
   role       = aws_iam_role.ecs_role[count.index].name
   policy_arn = "arn:aws:iam::aws:policy/AmazonSNSFullAccess"
-
 }

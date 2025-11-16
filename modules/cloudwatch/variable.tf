@@ -4,5 +4,6 @@ variable "cloudwatch_resources" {
     cl_lg_name           = string
     cl_lg_app            = string
     cw_lg_stream_name    = string
+    tags                  = map(string)
   }))
 }

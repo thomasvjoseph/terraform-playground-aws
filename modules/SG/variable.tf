@@ -16,13 +16,9 @@ variable "sg_resources" {
       cidr_blocks     = optional(list(string))
       security_groups = optional(list(string))
     }))
+    tags = map(string)
   }))
 }
 variable "vpc_id" {
   type = string
-}
-
-variable "tags" {
-  type        = map(any)
-  description = "Tags for Security Group"
 }

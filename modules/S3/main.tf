@@ -10,6 +10,7 @@ resource "aws_s3_bucket" "example" {
   }
 }
 
+
 resource "aws_s3_account_public_access_block" "example_block" {
   block_public_acls       = true
   block_public_policy     = true

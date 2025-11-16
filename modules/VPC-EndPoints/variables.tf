@@ -48,3 +48,30 @@ variable "create_s3_gateway_endpoint" {
   type        = bool
   description = "Flag to create the S3 Gateway endpoint."
 }
+
+variable "create_ssm_endpoint" {
+  type    = bool
+  default = true
+}
+
+variable "create_ssmmessages_endpoint" {
+  type    = bool
+  default = true
+}
+
+variable "create_ec2messages_endpoint" {
+  type    = bool
+  default = true
+}
+
+variable "create_sts_endpoint" {
+  description = "Create the STS interface endpoint"
+  type        = bool
+  default     = false
+}
+
+variable "create_secretsmanager_endpoint" {
+  description = "Create the Secrets Manager interface endpoint"
+  type        = bool
+  default     = false
+}

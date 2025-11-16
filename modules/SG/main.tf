@@ -32,10 +32,9 @@ resource "aws_security_group" "security_group" {
     }
   }
 
-  tags = var.tags
+  tags = each.value.tags
+
 }
-
-
 #Note
 /* 
   •	lookup Function: This function is used to check for the presence of a key in a map. If the key (e.g., cidr_blocks or security_groups) is present in the rule, it will be used. If not, it defaults to an empty list [].
