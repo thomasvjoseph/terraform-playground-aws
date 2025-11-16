@@ -1,33 +1,35 @@
 output "vpc_id" {
-  value = aws_vpc.vpc-main.id
+    description = "The ID of the VPC"
+    value       = aws_vpc.main.id
 }
 
-output "vpc_cidr_block" {
-  value = aws_vpc.vpc-main.cidr_block
+output "public_subnets" {
+    description = "The IDs of the public subnets"
+    value       = aws_subnet.public[*].id
+  
 }
 
 output "internet_gateway_id" {
-  value = aws_internet_gateway.i-gw.id
+    description = "The ID of the Internet Gateway"
+    value       = aws_internet_gateway.igw.id
 }
 
-output "route_table_public_id" {
-  value = aws_route_table.public.id
+output "public_route_table_id" {
+    description = "The ID of the public route table"
+    value       = aws_route_table.public_rt.id
 }
 
-output "route_table_private_id" {
-  value = aws_route_table.private.id
+output "availability_zones" {
+    description = "The availability zones used for the subnets"
+    value       = local.azs
 }
 
-output "db_subnet_group_name" {
-  value = aws_db_subnet_group.db_subnet_group.name
+output "private_subnets" {
+    description = "The IDs of the private subnets"
+    value       = aws_subnet.private[*].id
 }
 
-# Output all subnet IDs
-output "subnet_ids" {
-  value = { for k, v in aws_subnet.subnets : k => v.id }
-}
-
-# Output only public subnet IDs (those with map_public_ip_on_launch = true)
-output "public_subnet_ids" {
-  value = { for k, v in aws_subnet.subnets : k => v.id if v.map_public_ip_on_launch == true }
+output "private_route_table_id" {
+    description = "The ID of the private route table"
+    value       = aws_route_table.private_rt.id
 }
